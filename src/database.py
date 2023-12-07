@@ -10,56 +10,53 @@ class DatabaseController:
 
     def addTable(self):
         self.cur.execute('''CREATE TABLE IF NOT EXISTS TaskEntries (
-            id integer PRIMARY KEY,
+            id integer PRIMARY KEY AUTOINCREMENT,
             date text,
-            time_from text,
-            time_to text,
+            start_time text,
+            end_time text,
             task text, 
             tag text
             )''')
 
-    def addEntry(self, date, time_from, time_to, task, tag):
+    def addEntry(self, date, start_time, end_time, task, tag):
         self.cur.execute('''INSERT INTO TaskEntries (
             date,
-            time_from,
-            time_to,
+            start_time,
+            end_time,
             task,
             tag
             ) 
             VALUES (?, ?, ?, ?, ?)
-        ''', (date, time_from, time_to, task, tag))
+        ''', (date, start_time, end_time, task, tag))
         self.con.commit()
 
-    def retrieveAllEntries(self):
+    def queryAllEntries(self):
         self.cur.execute("SELECT * FROM TaskEntries")
         rows = self.cur.fetchall()
         return rows
 
-    def retrieveTaskEntriesByTag(self, tag):
-        self.cur.execute(f"SELECT * FROM TaskEntries WHERE tag=?", (tag,))
-        rows = self.cur.fetchall()
-        return rows
-    
-    def retrieveTaskEntriesByDate(self, date):
-        self.cur.execute(f"SELECT * FROM TaskEntries WHERE date=?", (date,))
-        rows = self.cur.fetchall()
-        return rows
-    
-    def retrieveTaskEntriesByTag(self, task):
-        self.cur.execute(f"SELECT * FROM TaskEntries WHERE tag=?", (task,))
-        rows = self.cur.fetchall()
-        return rows
+    def queryEntry(self, date=None, task=None, tag=None):
+        query = 'SELECT * FROM TaskEntries WHERE i=i'
+        params = []
+
+        if date: 
+            params.append(date)
+            query += ' AND date = ?'
+        if task:
+            params.append(task)
+            query += ' AND task = ?'
+        if tag:
+            params.append(tag)
+            query += ' AND tag = ?'
+
+        self.cur.execute(query, params)
+        
+        entries = self.cur.fetchall()
+        return entries
 
     def deleteAll(self):
         self.cur.execute("DELETE FROM TaskEntries")
 
 if __name__ == "__main__":
     db = DatabaseController()
-    db.addTable()
-    db.addEntry('12/8/2023', '12:42', '12:56', 'wrote code', ':CODING')
-    db.addEntry('12/8/2023', '12:42', '12:56', 'wrote code', ':SLEEPING')
-    data = db.retrieveTaskEntriesByTag(":SLEEPING")
-    print(data)
-    db.deleteAll()
-    data = db.retrieveAllEntries()
-    print(data)
+    print(db.con)
