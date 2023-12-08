@@ -43,13 +43,12 @@ def main():
         res = command.execute()
 
         if res is not None:
-            print("Query Results")
+            # make this look better
+            print(f"Query Results for \"{args.query_arg}\"")
             print("_____________")
             for entry in res:
-                print(entry)
+                for i in range(1, len(entry)):
+                    print(entry[i], end=' ')
+                print()
         else:
             print(f'No entries found for {args.query_arg}')
-       
-
-if __name__ == '__main__':
-    main()

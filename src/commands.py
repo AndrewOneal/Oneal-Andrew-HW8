@@ -1,5 +1,4 @@
 import sys
-
 from datetime import datetime
 sys.path.append('src')
 from database import DatabaseController
