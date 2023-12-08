@@ -36,27 +36,23 @@ class DatabaseController:
         return rows
 
     def queryEntry(self, date=None, task=None, tag=None):
-        query = 'SELECT * FROM TaskEntries WHERE i=i'
+        query = 'SELECT * FROM TaskEntries WHERE'
         params = []
 
         if date: 
             params.append(date)
-            query += ' AND date = ?'
+            query += ' date = ?'
         if task:
             params.append(task)
-            query += ' AND task = ?'
+            query += ' task = ?'
         if tag:
             params.append(tag)
-            query += ' AND tag = ?'
+            query += ' tag = ?'
 
-        self.cur.execute(query, params)
+        self.cur.execute(query, tuple(params))
         
         entries = self.cur.fetchall()
         return entries
 
     def deleteAll(self):
         self.cur.execute("DELETE FROM TaskEntries")
-
-if __name__ == "__main__":
-    db = DatabaseController()
-    print(db.con)

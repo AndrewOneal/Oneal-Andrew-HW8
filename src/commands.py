@@ -17,6 +17,7 @@ class AddEntryCommand(Command):
 
     def execute(self):
         self.db.addEntry(self.date, self.start_time, self.end_time, self.task, self.tag)
+        return "Entry added!"
 
 class QueryEntriesCommand(Command):
     db = DatabaseController()
@@ -27,5 +28,6 @@ class QueryEntriesCommand(Command):
         self.tag = tag
 
     def execute(self):
-        self.db.queryEntry(self.date, self.task, self.tag)
+        return self.db.queryEntry(self.date, self.task, self.tag)
+        
 
