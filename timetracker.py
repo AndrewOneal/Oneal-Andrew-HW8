@@ -1,6 +1,7 @@
 import sys
 sys.path.append('src')
-from user_input import main
+from user_input import UserInputHandler
 
 if __name__ == "__main__":
-    main()
+    handler = UserInputHandler()
+    handler.run()
