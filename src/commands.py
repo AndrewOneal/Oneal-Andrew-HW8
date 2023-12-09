@@ -5,8 +5,6 @@ from database import DatabaseController
 
 class Command(object):
     date_format = '%Y/%m/%d'
-    time_format = '%I:%m'
-    time_format_ampm = '%I:%m%p'
 
     def execute(self): pass
 
