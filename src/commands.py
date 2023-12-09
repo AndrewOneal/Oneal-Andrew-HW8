@@ -5,11 +5,11 @@ from database import DatabaseController
 
 class Command(object):
     date_format = '%Y/%m/%d'
+    db = DatabaseController()
 
     def execute(self): pass
 
 class AddEntryCommand(Command):
-    db = DatabaseController()
 
     def __init__(self, date_str, start_time, end_time, task, tag):
         self.date = self._parse_date(date_str)
@@ -29,7 +29,6 @@ class AddEntryCommand(Command):
             return date_str
 
 class QueryEntriesCommand(Command):
-    db = DatabaseController()
 
     def __init__(self, date=None, task=None, tag=None):
         self.date = date
