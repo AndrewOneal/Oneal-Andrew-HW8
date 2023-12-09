@@ -1,0 +1,5 @@
+Code Smell 1: Dispensable - Dead Code (unused variables)
+Date Found: 12/8/2023
+Refactoring: Deleted unused code
+Code Smell link (lines 8 and 9): https://github.com/AndrewOneal/SD-Oneal-Andrew-HW8/blob/6ac9bb221c9e341b8d92192c7a044e5f7fd69305/src/commands.py
+Refactoring link: https://github.com/AndrewOneal/SD-Oneal-Andrew-HW8/commit/90233d08077cfedf58649b603e7890d284b6266e
