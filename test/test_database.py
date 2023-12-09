@@ -46,9 +46,23 @@ def test_add_entry(db):
     assert entries[1][4] == task
     assert entries[1][5] == tag
 
+    db.deleteAll()
 
 def test_queryAllEntries(db):
-    pass
+    start_time = "10:00PM"
+    end_time = "11:00PM"
+
+    db.addEntry("today", start_time, end_time, "task_today", ":TAGTODAY")
+    db.addEntry("2023/1/1", start_time, end_time, "task_date", ":TAGDATE")
+    db.addEntry("2023/1/2", start_time, end_time, "example task", "TAGTASK")
+    db.addEntry("2023/1/3", start_time, end_time, "task_tag", ":TASKTAG")
+
+    res = db.queryEntry("today")
+    assert(res[1] == "today")
+    assert(res[4] == "task_today")
+    assert(res[5] == ":TAGTODAY")
+
+
 
 def test_queryEntry(db):
     pass
