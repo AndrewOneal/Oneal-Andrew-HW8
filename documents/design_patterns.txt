@@ -1,1 +1,2 @@
-command
+command: command.py
+singleton: DatabaseController

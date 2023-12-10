@@ -4,12 +4,10 @@ sys.path.append('src')
 from database import DatabaseController
 
 class Command(object):
-    date_format = '%Y/%m/%d'
-    db = DatabaseController()
-
     def execute(self): pass
 
 class AddEntryCommand(Command):
+    date_format = '%Y/%m/%d'
 
     def __init__(self, date_str, start_time, end_time, task, tag):
         self.date = self._parse_date(date_str)
@@ -19,7 +17,7 @@ class AddEntryCommand(Command):
         self.tag = tag
 
     def execute(self):
-        self.db.addEntry(self.date, self.start_time, self.end_time, self.task, self.tag)
+        DatabaseController().addEntry(self.date, self.start_time, self.end_time, self.task, self.tag)
         return "Entry added!"
     
     def _parse_date(self, date_str):
@@ -36,6 +34,5 @@ class QueryEntriesCommand(Command):
         self.tag = tag
 
     def execute(self):
-        return self.db.queryEntry(self.date, self.task, self.tag)
+        return DatabaseController().queryEntry(self.date, self.task, self.tag)
         
-

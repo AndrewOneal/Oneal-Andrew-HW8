@@ -2,11 +2,24 @@ import sqlite3
 
 class DatabaseController:
 
-    def __init__(self):
-        self.con = sqlite3.connect("timetracker.db")
-        self.cur = self.con.cursor()
-        self.addTable()
+    _instance = None
 
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(DatabaseController, cls).__new__(cls)
+            cls._instance.__init__(*args, **kwargs)
+        return cls._instance
+
+    def __init__(self):
+        if not hasattr(self, 'initialized'):
+            self.initialized = True
+            self.con = sqlite3.connect("timetracker.db")
+            self.cur = self.con.cursor()
+            self.addTable()
+
+    def __del__(self):
+        self.con.close()
+        
     def addTable(self):
         self.cur.execute('''CREATE TABLE IF NOT EXISTS TaskEntries (
             id integer PRIMARY KEY AUTOINCREMENT,
@@ -56,3 +69,6 @@ class DatabaseController:
     def deleteAll(self):
         self.cur.execute("DROP TABLE IF EXISTS TaskEntries")
         self.addTable()
+
+    def queryReport(self, start_date, end_date):
+        pass
