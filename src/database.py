@@ -54,4 +54,5 @@ class DatabaseController:
         return entries
 
     def deleteAll(self):
-        self.cur.execute("DELETE FROM TaskEntries")
+        self.cur.execute("DROP TABLE IF EXISTS TaskEntries")
+        self.addTable()
