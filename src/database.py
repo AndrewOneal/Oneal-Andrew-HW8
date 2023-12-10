@@ -71,4 +71,8 @@ class DatabaseController:
         self.addTable()
 
     def queryReport(self, start_date, end_date):
-        pass
+        query = 'SELECT * FROM TaskEntries WHERE date BETWEEN ? AND ?'
+        params = (start_date, end_date)
+        self.cur.execute(query, params)
+        entries = self.cur.fetchall()
+        return entries

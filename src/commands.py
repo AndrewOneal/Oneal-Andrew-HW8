@@ -1,5 +1,4 @@
 import sys
-from datetime import datetime
 sys.path.append('src')
 from database import DatabaseController
 
@@ -7,10 +6,9 @@ class Command(object):
     def execute(self): pass
 
 class AddEntryCommand(Command):
-    date_format = '%Y/%m/%d'
 
     def __init__(self, date_str, start_time, end_time, task, tag):
-        self.date = self._parse_date(date_str)
+        self.date = date_str
         self.start_time = start_time
         self.end_time = end_time
         self.task = task
@@ -19,12 +17,6 @@ class AddEntryCommand(Command):
     def execute(self):
         DatabaseController().addEntry(self.date, self.start_time, self.end_time, self.task, self.tag)
         return "Entry added!"
-    
-    def _parse_date(self, date_str):
-        if date_str == 'today':
-            return datetime.now().strftime(self.date_format)
-        else: 
-            return date_str
 
 class QueryEntriesCommand(Command):
 
@@ -35,4 +27,12 @@ class QueryEntriesCommand(Command):
 
     def execute(self):
         return DatabaseController().queryEntry(self.date, self.task, self.tag)
-        
+    
+class ReportCommand(Command):
+    
+    def __init__(self, start_date, end_date):
+        self.start_date = start_date
+        self.end_date = end_date
+
+    def execute(self):
+        return DatabaseController().queryReport(self.start_date, self.end_date)

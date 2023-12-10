@@ -1,9 +1,12 @@
 import argparse
+from datetime import datetime
 import sys
 sys.path.append('src')
-from commands import AddEntryCommand, QueryEntriesCommand
+from commands import AddEntryCommand, QueryEntriesCommand, ReportCommand
 
 class UserInputHandler:
+    date_format = '%Y/%m/%d'
+
     def parse_entry(self, subparser):
         subparser.add_argument('date', help='Date in format YYYY/MM/DD')
         subparser.add_argument('start_time', help='Time started in format HH:MM AM/PM')
@@ -13,6 +16,10 @@ class UserInputHandler:
 
     def parse_query(self, subparser):
         subparser.add_argument('query_arg', help='Query argument')
+
+    def parse_report(self, subparser):
+        subparser.add_argument('start_date', help='Start date of report query range')
+        subparser.add_argument('end_date', help='End date of report query range')
 
     def parse_args(self):
         parser = argparse.ArgumentParser(description="Time Tracker CLI App")
@@ -24,15 +31,30 @@ class UserInputHandler:
         query_parser = subparsers.add_parser('query', help='Query entries of a specific date, task, or tag')
         self.parse_query(query_parser)
 
+        report_parser = subparsers.add_parser('report', help="Get report of tasks completed between two dates")
+        self.parse_report(report_parser)
+
         return parser.parse_args()
+    
+    def _parse_date(self, date_str):
+        if date_str == 'today':
+            return datetime.now().strftime(self.date_format)
+        else:
+            try:
+                return datetime.strptime(date_str, self.date_format)
+            except:
+                return None
 
     def run(self):
         args = self.parse_args()
 
         if args.command == 'record':
-            command = AddEntryCommand(args.date, args.start_time, args.end_time, args.task, args.tag)
-            res = command.execute()
-            print(res)
+            if self._parse_date(args.date):
+                command = AddEntryCommand(self._parse_date(args.date), args.start_time, args.end_time, args.task, args.tag)
+                res = command.execute()
+                print(res)
+            else:
+                print("Error: Incorrect date format. Input in format YYYY/mm/dd or 'today'")
         elif args.command == 'query':
             if '/' in args.query_arg or args.query_arg == 'today':
                 command = QueryEntriesCommand(date=args.query_arg)
@@ -44,7 +66,6 @@ class UserInputHandler:
             res = command.execute()
 
             if res is not None:
-                # make this look better
                 print(f"Query Results for \"{args.query_arg}\"")
                 print("_____________")
                 for entry in res:
@@ -53,3 +74,17 @@ class UserInputHandler:
                     print()
             else:
                 print(f'No entries found for {args.query_arg}')
+
+        elif args.command == 'report':
+            command = ReportCommand(args.start_date, args.end_date)
+            res = command.execute()
+
+            if res is not None:
+                print(f"Report of activities between {args.start_date} and {args.end_date}")
+                print("__________________________________________________________")
+                for entry in res:
+                    for i in range(1, len(entry)):
+                        print(entry[i], end=' ')
+                    print()
+            else:
+                print(f"No results for activities between {args.start_date} and {args.end_date}")

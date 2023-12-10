@@ -5,17 +5,11 @@ import os
 sys.path.append('src')
 from database import DatabaseController
 
-@pytest.fixture
-def db():
-    yield DatabaseController()
-
-def test_addTable(db):
-    db.addTable()
-    db.deleteAll()
+def test_addTable():
+    DatabaseController().addTable()
+    DatabaseController().deleteAll()
 
 def test_add_entry():
-
-    db = DatabaseController()
 
     date = "2023/01/01"
     start_time = "10:00AM"
@@ -23,9 +17,9 @@ def test_add_entry():
     task = "Sample Task"
     tag = ":SAMPLETAG"
 
-    db.addEntry(date, start_time, end_time, task, tag)
+    DatabaseController().addEntry(date, start_time, end_time, task, tag)
 
-    entries = db.queryAllEntries()
+    entries = DatabaseController().queryAllEntries()
     assert len(entries) == 1
     assert entries[0][1] == date
     assert entries[0][2] == start_time
@@ -39,8 +33,8 @@ def test_add_entry():
     task = "Sample Task"
     tag = ":SAMPLETAG"
 
-    db.addEntry(date, start_time, end_time, task, tag)
-    entries = db.queryAllEntries()
+    DatabaseController().addEntry(date, start_time, end_time, task, tag)
+    entries = DatabaseController().queryAllEntries()
 
     assert len(entries) == 2
     assert entries[1][1] == date
@@ -49,77 +43,84 @@ def test_add_entry():
     assert entries[1][4] == task
     assert entries[1][5] == tag
 
-    db.deleteAll()
+    DatabaseController().deleteAll()
 
 def test_queryAllEntries():
-    db = DatabaseController()
-
     start_time = "10:00PM"
     end_time = "11:00PM"
 
-    db.addEntry("today", start_time, end_time, "task_today", ":TAGTODAY")
-    db.addEntry("2023/1/1", start_time, end_time, "task_date", ":TAGDATE")
-    db.addEntry("2023/1/2", start_time, end_time, "example task", ":TAGTASK")
-    db.addEntry("2023/1/3", start_time, end_time, "task_tag", ":TASKTAG")
+    DatabaseController().addEntry("today", start_time, end_time, "task_today", ":TAGTODAY")
+    DatabaseController().addEntry("2023/1/1", start_time, end_time, "task_date", ":TAGDATE")
+    DatabaseController().addEntry("2023/1/2", start_time, end_time, "example task", ":TAGTASK")
+    DatabaseController().addEntry("2023/1/3", start_time, end_time, "task_tag", ":TASKTAG")
 
-    res = db.queryAllEntries()
+    res = DatabaseController().queryAllEntries()
     assert len(res) == 4
 
     for entry in res:
         assert len(entry) == 6
         assert isinstance(entry[0], int)
 
-def test_queryEntry(db):
-    db = DatabaseController()
+def test_queryEntry():
 
     start_time = "10:00PM"
     end_time = "11:00PM"
 
-    db.addEntry("today", start_time, end_time, "task_today", ":TAGTODAY")
-    db.addEntry("2023/1/1", start_time, end_time, "task_date", ":TAGDATE")
-    db.addEntry("2023/1/2", start_time, end_time, "example task", ":TAGTASK")
-    db.addEntry("2023/1/3", start_time, end_time, "task_tag", ":TASKTAG")
+    DatabaseController().addEntry("today", start_time, end_time, "task_today", ":TAGTODAY")
+    DatabaseController().addEntry("2023/1/1", start_time, end_time, "task_date", ":TAGDATE")
+    DatabaseController().addEntry("2023/1/2", start_time, end_time, "example task", ":TAGTASK")
+    DatabaseController().addEntry("2023/1/3", start_time, end_time, "task_tag", ":TASKTAG")
 
-    res = db.queryEntry(date="today")
+    res = DatabaseController().queryEntry(date="today")
     assert(res[0][1] == "today")
     assert(res[0][4] == "task_today")
     assert(res[0][5] == ":TAGTODAY")
 
-    res = db.queryEntry(date="2023/1/1")
+    res = DatabaseController().queryEntry(date="2023/1/1")
     assert(res[0][1] == "2023/1/1")
     assert(res[0][4] == "task_date")
     assert(res[0][5] == ":TAGDATE")
     
-    res = db.queryEntry(task="example task")
+    res = DatabaseController().queryEntry(task="example task")
     assert(res[0][1] == "2023/1/2")
     assert(res[0][4] == "example task")
     assert(res[0][5] == ":TAGTASK")
     
-    res = db.queryEntry(tag=":TASKTAG")
+    res = DatabaseController().queryEntry(tag=":TASKTAG")
     assert(res[0][1] == "2023/1/3")
     assert(res[0][4] == "task_tag")
     assert(res[0][5] == ":TASKTAG") 
 
-    db.deleteAll()
+    DatabaseController().deleteAll()
 
     
 
-def test_deleteAll(db):
-    db = DatabaseController()
+def test_deleteAll():
 
     start_time = "10:00PM"
     end_time = "11:00PM"
 
-    db.addEntry("today", start_time, end_time, "task_today", ":TAGTODAY")
-    db.addEntry("2023/1/1", start_time, end_time, "task_date", ":TAGDATE")
-    db.addEntry("2023/1/2", start_time, end_time, "example task", "TAGTASK")
-    db.addEntry("2023/1/3", start_time, end_time, "task_tag", ":TASKTAG")
+    DatabaseController().addEntry("today", start_time, end_time, "task_today", ":TAGTODAY")
+    DatabaseController().addEntry("2023/1/1", start_time, end_time, "task_date", ":TAGDATE")
+    DatabaseController().addEntry("2023/1/2", start_time, end_time, "example task", "TAGTASK")
+    DatabaseController().addEntry("2023/1/3", start_time, end_time, "task_tag", ":TASKTAG")
 
-    entries_before_delete = db.queryAllEntries()
+    entries_before_delete = DatabaseController().queryAllEntries()
     assert len(entries_before_delete) == 4 
 
-    db.deleteAll()
+    DatabaseController().deleteAll()
 
-    entries_after_delete = db.queryAllEntries()
+    entries_after_delete = DatabaseController().queryAllEntries()
     assert len(entries_after_delete) == 0
 
+def test_queryReport():
+    DatabaseController().addEntry("2023-01-01", "10:00", "12:00", "Test Task", "Test Tag")
+    DatabaseController().addEntry("2023-01-02", "14:00", "16:00", "Another Task", "Another Tag")
+
+    start_date = "2023-01-01"
+    end_date = "2023-01-02"
+    result = DatabaseController().queryReport(start_date, end_date)
+
+    assert len(result) == 2  
+
+    DatabaseController().deleteAll()
