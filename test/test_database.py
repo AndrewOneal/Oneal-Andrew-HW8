@@ -1,7 +1,4 @@
-import pytest
 import sys
-import sqlite3
-import os
 sys.path.append('src')
 from database import DatabaseController
 
@@ -22,7 +19,6 @@ def test_add_entry():
 
     entries = DatabaseController().queryAllEntries()
     assert len(entries) == 1
-    print(entries)
     assert entries[0][1] == date
     assert entries[0][2] == start_time
     assert entries[0][3] == end_time
