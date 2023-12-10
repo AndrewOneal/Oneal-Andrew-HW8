@@ -7,15 +7,16 @@ class Command(object):
 
 class AddEntryCommand(Command):
 
-    def __init__(self, date_str, start_time, end_time, task, tag):
+    def __init__(self, date_str, start_time, end_time, task, tag, hours_spent):
         self.date = date_str
         self.start_time = start_time
         self.end_time = end_time
         self.task = task
         self.tag = tag
+        self.hours_spent = hours_spent
 
     def execute(self):
-        DatabaseController().addEntry(self.date, self.start_time, self.end_time, self.task, self.tag)
+        DatabaseController().addEntry(self.date, self.start_time, self.end_time, self.task, self.tag, self.hours_spent)
         return "Entry added!"
 
 class QueryEntriesCommand(Command):
@@ -36,3 +37,8 @@ class ReportCommand(Command):
 
     def execute(self):
         return DatabaseController().queryReport(self.start_date, self.end_date)
+
+class PriorityCommand(Command):
+
+    def execute(self):
+        return DatabaseController().queryPriority()

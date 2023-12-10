@@ -7,3 +7,4 @@ if __name__ == "__main__":
     DatabaseController()
     inputHandler = UserInputHandler()
     inputHandler.run()
+    DatabaseController().close()
