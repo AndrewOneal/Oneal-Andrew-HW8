@@ -6,6 +6,7 @@ from commands import AddEntryCommand, QueryEntriesCommand, ReportCommand
 
 class UserInputHandler:
     date_format = '%Y/%m/%d'
+    time_format = '%I:%M%p'
 
     def parse_entry(self, subparser):
         subparser.add_argument('date', help='Date in format YYYY/MM/DD')
@@ -44,17 +45,30 @@ class UserInputHandler:
                 return datetime.strptime(date_str, self.date_format)
             except:
                 return None
+            
+    def _parse_time(self, time_str):
+        try:
+            return datetime.strptime(time_str, self.time_format).strftime(self.time_format)
+        except:
+            return None
 
     def run(self):
         args = self.parse_args()
 
         if args.command == 'record':
-            if self._parse_date(args.date):
-                command = AddEntryCommand(self._parse_date(args.date), args.start_time, args.end_time, args.task, args.tag)
+            if self._parse_date(args.date) and self._parse_time(args.start_time) and self._parse_time(args.end_time):
+                command = AddEntryCommand(
+                    self._parse_date(args.date),
+                    self._parse_time(args.start_time),
+                    self._parse_time(args.end_time),
+                    args.task,
+                    args.tag
+                )
                 res = command.execute()
                 print(res)
             else:
-                print("Error: Incorrect date format. Input in format YYYY/mm/dd or 'today'")
+                print("Error: Incorrect date or time format. Input date in format YYYY/mm/dd or 'today', and time in format HH:MM AM/PM")
+                
         elif args.command == 'query':
             if '/' in args.query_arg or args.query_arg == 'today':
                 command = QueryEntriesCommand(date=args.query_arg)
