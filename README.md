@@ -16,4 +16,5 @@ To install all dependencies. simply run `pip install pytest`
 * [Version 2](https://github.com/AndrewOneal/SD-Oneal-Andrew-HW8/blob/main/documents/manual/user_manual_ver2.md)
 
 ## Testing
+Please delete timetracker.db before testing, it may affect the test results
 To test, simply run `pytest` in the root folder
