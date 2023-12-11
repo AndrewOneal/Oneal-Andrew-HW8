@@ -1,4 +1,4 @@
-# User Manual - Version 1
+# User Manual - Version 2
 
 ## Command 1: Record
 
