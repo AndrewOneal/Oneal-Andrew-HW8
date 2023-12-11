@@ -53,8 +53,9 @@ class UserInputHandler:
                 return None
             
     def _parse_time(self, time_str):
+        time_str = time_str.upper()
         try:
-            if 'AM' not in time_str or 'PM' not in time_str:
+            if 'AM' not in time_str and 'PM' not in time_str:
                 time_str = time_str + "AM"
             return datetime.strptime(time_str, self.time_format)
         except ValueError:

@@ -103,3 +103,5 @@ def test_PriorityCommand():
     result = command.execute()
 
     assert isinstance(result, list)
+
+    DatabaseController().deleteAll()
